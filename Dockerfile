@@ -1,36 +1,25 @@
 FROM python:3.10-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    git \
-    curl \
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
-COPY requirements.txt .
+WORKDIR /app
 
-# Install Python packages
+# Install Python dependencies first (layer caching)
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy all source files
 COPY . .
 
-# Create logs directory
-RUN mkdir -p logs
+# Create models directory (model file loaded at runtime if present)
+RUN mkdir -p models static/samples
 
-# Expose ports
-EXPOSE 8501 8000
+# Hugging Face Spaces runs on port 7860
+ENV PORT=7860
+EXPOSE 7860
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8501/_stcore/health || exit 1
-
-# Default command (Streamlit)
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Start Flask via gunicorn (production-ready)
+CMD ["gunicorn", "--bind", "0.0.0.0:7860", "--workers", "1", "--timeout", "120", "server:app"]
