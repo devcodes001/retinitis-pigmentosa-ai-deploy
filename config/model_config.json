@@ -1,0 +1,56 @@
+{
+  "models": {
+    "vit": {
+      "name": "Vision Transformer",
+      "alias": "vit",
+      "path": "models/VIT_rp.pth",
+      "input_size": 224,
+      "architecture": "transformer",
+      "enabled": true
+    },
+    "swin": {
+      "name": "Swin Transformer",
+      "alias": "swin",
+      "path": "models/swin_retina_rp_deploy.pth",
+      "input_size": 224,
+      "architecture": "hierarchical_transformer",
+      "enabled": true,
+      "default": true
+    },
+    "efficientnet": {
+      "name": "EfficientNet",
+      "alias": "efficientnet",
+      "path": "models/efficientnet_rp_model.pth",
+      "input_size": 224,
+      "architecture": "efficient_cnn",
+      "enabled": true
+    },
+    "resnet50": {
+      "name": "ResNet50",
+      "alias": "resnet50",
+      "path": "models/resnet50_retinitis_classifier.pth",
+      "input_size": 224,
+      "architecture": "cnn",
+      "enabled": true
+    },
+    "mobilenet": {
+      "name": "MobileNet",
+      "alias": "mobilenet",
+      "path": "models/mobilenet.pth",
+      "input_size": 224,
+      "architecture": "mobile_cnn",
+      "enabled": true
+    }
+  },
+  "inference": {
+    "device": "auto",
+    "batch_size": 32,
+    "confidence_threshold": 0.5,
+    "return_uncertainty": true,
+    "num_augmentations": 0
+  },
+  "classes": {
+    "0": "Normal",
+    "1": "Retinitis Pigmentosa"
+  }
+}

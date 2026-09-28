@@ -1,0 +1,43 @@
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ── Large Binary / Data Files (too big for GitHub) ─────────
+models/*.pth
+models/*.pt
+models/*.bin
+dataset_structured/
+images/
+
+# ── Database (runtime file, not source) ────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Environment & Secrets ──────────────────────────────────
+.env
+.env.*
+*.key
+secrets.json
+
+# ── OS / Editor ────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# ── Logs & Temp ────────────────────────────────────────────
+*.log
+*.tmp
+*.bak

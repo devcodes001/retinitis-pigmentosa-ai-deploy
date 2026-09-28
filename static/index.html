@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPeyecare | Clinical AI Screening for Retinitis Pigmentosa</title>
+  <meta name="description" content="State-of-the-art Deep Learning Retinal Screening and Clinical Tele-Referral Platform for Retinitis Pigmentosa." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" style="position:fixed;top:1.2rem;right:1.2rem;z-index:9999;display:flex;flex-direction:column;gap:0.6rem;"></div>
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <div class="brand-logo" data-navigate="home" style="cursor:pointer;">
+        <div class="brand-icon">👁️</div>
+        <div>
+          <div class="brand-name">RP<span>eyecare</span></div>
+          <div class="brand-badge">Clinical AI Ophthalmology</div>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a class="nav-item active" data-navigate="home">Home</a></li>
+          <li><a class="nav-item" data-navigate="scanner">🔬 AI Scanner</a></li>
+          <li><a class="nav-item" data-navigate="simulator">👁️ Vision Sim</a></li>
+          <li><a class="nav-item" data-navigate="about">ℹ️ About</a></li>
+          <li><a class="nav-item" data-navigate="patient">👤 Patient</a></li>
+          <li><a class="nav-item" data-navigate="clinic">🏥 Clinic</a></li>
+          <li><a class="nav-item" data-navigate="admin">🛡️ Admin</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="userHeaderActions">
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('authModal').classList.add('open')">Sign In</button>
+        <button class="btn btn-primary btn-sm" data-navigate="scanner">Scan Retina</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 1: HOME                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section active" id="view-home">
+    <div class="container hero-section">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-pill">
+            <span>🔬</span> Next-Gen Deep Learning Diagnostics
+          </div>
+          <h1 class="hero-title">
+            Early Detection for <br>
+            <span class="gradient-text">Retinitis Pigmentosa</span>
+          </h1>
+          <p class="hero-desc">
+            Analyze digital retinal fundus scans in milliseconds using fine-tuned ResNet-50 transfer learning. Empowers patients with instant clinical PDF reports and immediate geographic clinic referral.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-navigate="scanner">
+              <span>🚀</span> Launch AI Scanner
+            </button>
+            <button class="btn btn-accent" data-navigate="simulator">
+              <span>👁️</span> Simulate RP Vision
+            </button>
+            <button class="btn btn-secondary" onclick="document.getElementById('authModal').classList.add('open')">
+              <span>🔑</span> Sign In to Portal
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="retinal-preview-card" id="heroPreviewBox">
+            <div class="scanner-frame">
+              <img src="/static/samples/rp_1.png" alt="Retinal Fundus Benchmark" class="scanner-img" id="heroCardImg" />
+              <div class="laser-line"></div>
+              <div class="scanner-overlay-info">
+                <div>
+                  <div style="font-weight:700;font-size:0.95rem;color:#fff;">Benchmark Examination</div>
+                  <div style="color:#38bdf8;font-size:0.8rem;font-weight:600;">PyTorch ResNet-50 Engine</div>
+                </div>
+                <span class="result-badge badge-high">97.5% Accuracy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Ribbon -->
+      <div class="stats-ribbon">
+        <div class="glass-panel stat-box">
+          <div class="stat-value" id="statAcc" style="color:#38bdf8;">97.5%</div>
+          <div class="stat-label">Model Accuracy</div>
+        </div>
+        <div class="glass-panel stat-box">
+          <div class="stat-value" id="statUsers">0</div>
+          <div class="stat-label">Registered Patients</div>
+        </div>
+        <div class="glass-panel stat-box">
+          <div class="stat-value" id="statClinics">0</div>
+          <div class="stat-label">Verified Clinics</div>
+        </div>
+        <div class="glass-panel stat-box">
+          <div class="stat-value" id="statScans">0</div>
+          <div class="stat-label">Scans Screened</div>
+        </div>
+      </div>
+
+      <!-- Portals Showcase -->
+      <div style="text-align:center;margin:4rem 0 2rem;">
+        <h2 style="font-size:2.5rem;font-weight:800;color:#fff;">Three Integrated Portals</h2>
+        <p style="color:var(--text-muted);font-size:1.05rem;">Engineered for patient self-service, doctor triage, and regulatory administration.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:1.5rem;margin-bottom:3rem;">
+        <div class="glass-panel" style="padding:2.2rem;border-top:4px solid #2563eb;">
+          <div style="font-size:2.5rem;margin-bottom:0.8rem;">👤</div>
+          <h3 style="color:#fff;margin-bottom:0.6rem;">Patient Portal</h3>
+          <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.6;margin-bottom:1.5rem;">Upload fundus photographs, view live probability breakdowns, download clinical PDF reports, and book appointments near your city.</p>
+          <button class="btn btn-secondary btn-sm" data-navigate="patient" style="width:100%;">Access Portal →</button>
+        </div>
+
+        <div class="glass-panel" style="padding:2.2rem;border-top:4px solid #10b981;">
+          <div style="font-size:2.5rem;margin-bottom:0.8rem;">🏥</div>
+          <h3 style="color:#fff;margin-bottom:0.6rem;">Clinic Portal</h3>
+          <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.6;margin-bottom:1.5rem;">Ophthalmologist queue managing appointment schedules, inspecting AI risk assessments, and tracking high-risk patient referrals.</p>
+          <button class="btn btn-secondary btn-sm" data-navigate="clinic" style="width:100%;">Access Portal →</button>
+        </div>
+
+        <div class="glass-panel" style="padding:2.2rem;border-top:4px solid #f43f5e;">
+          <div style="font-size:2.5rem;margin-bottom:0.8rem;">🛡️</div>
+          <h3 style="color:#fff;margin-bottom:0.6rem;">System Admin</h3>
+          <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.6;margin-bottom:1.5rem;">Supervisory console for verifying and approving new eye clinic accreditations, managing patient directories, and auditing inference logs.</p>
+          <button class="btn btn-secondary btn-sm" data-navigate="admin" style="width:100%;">Access Portal →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 2: AI SCANNER                                            -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-scanner">
+    <div class="container" style="padding-top:2rem;">
+      <div style="text-align:center;margin-bottom:2.5rem;">
+        <span class="hero-pill">⚡ Neural Network Inference Engine</span>
+        <h2 style="font-size:2.8rem;color:#ffffff;font-weight:800;margin-top:0.4rem;">Retinal Diagnostic Workspace</h2>
+        <p style="color:var(--text-muted);max-width:650px;margin:0.5rem auto 0;">Upload a color fundus image or click any pre-loaded clinical case sample below to trigger deep feature extraction.</p>
+      </div>
+
+      <div class="workspace-grid">
+        <!-- Left: Upload & Samples -->
+        <div>
+          <div class="dropzone-box" id="scannerDropzone">
+            <input type="file" id="fundusFileInput" accept="image/png,image/jpeg,image/bmp" style="display:none;" />
+            <div class="dropzone-icon">📤</div>
+            <h4 style="color:#fff;font-size:1.15rem;margin-bottom:0.3rem;">Drag &amp; Drop Retinal Scan</h4>
+            <p style="color:var(--text-muted);font-size:0.88rem;">Accepts standard clinical fundus PNG, JPG, or BMP formats (Max 20MB)</p>
+          </div>
+
+          <!-- 1-Click Demo Samples -->
+          <div class="sample-bar">
+            <div class="sample-title"><span>⚡</span> Or Try With Curated Clinical Samples:</div>
+            <div class="sample-pill-group">
+              <button class="sample-pill normal" data-sample="normal_1" data-img-url="/static/samples/normal_1.png">🟢 Healthy Retina A</button>
+              <button class="sample-pill normal" data-sample="normal_2" data-img-url="/static/samples/normal_2.png">🟢 Healthy Retina B</button>
+              <button class="sample-pill rp" data-sample="rp_1" data-img-url="/static/samples/rp_1.png">🔴 Retinitis Pigmentosa 1</button>
+              <button class="sample-pill rp" data-sample="rp_2" data-img-url="/static/samples/rp_2.png">🔴 Severe RP 2</button>
+            </div>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <div id="selectedScanName" style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.6rem;">No scan selected yet.</div>
+            <button class="btn btn-primary" id="runAnalysisBtn" style="width:100%;padding:0.9rem;" disabled>
+              <span>🧠</span> Run Deep Learning Screening
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Scanner Preview & Result -->
+        <div>
+          <div class="retinal-preview-card" id="scannerCard">
+            <div class="scanner-frame" style="height:320px;">
+              <img src="/static/samples/normal_1.png" alt="Current Scan" id="liveScanPreview" class="scanner-img" />
+              <div class="laser-line"></div>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div class="glass-panel result-card" id="resultCard" style="margin-top:1.4rem;">
+            <div class="result-header">
+              <div>
+                <h3 id="resultTitle" style="color:#fff;font-size:1.4rem;">Analysis Outcome</h3>
+                <div id="resultConfidence" style="color:var(--text-muted);font-size:0.88rem;margin-top:0.2rem;">—</div>
+              </div>
+              <span class="result-badge badge-low" id="resultBadge">AWAITING SCAN</span>
+            </div>
+
+            <div class="prob-meter-group">
+              <div class="prob-row">
+                <div class="prob-labels">
+                  <span style="color:#a7f3d0;">Healthy Retina Probability</span>
+                  <span id="probNormalVal" style="color:#34d399;font-weight:700;">--%</span>
+                </div>
+                <div class="prob-track">
+                  <div class="prob-fill fill-normal" id="probNormalFill" style="width:0%;"></div>
+                </div>
+              </div>
+              <div class="prob-row">
+                <div class="prob-labels">
+                  <span style="color:#fecdd3;">Retinitis Pigmentosa Probability</span>
+                  <span id="probDiseaseVal" style="color:#fb7185;font-weight:700;">--%</span>
+                </div>
+                <div class="prob-track">
+                  <div class="prob-fill fill-disease" id="probDiseaseFill" style="width:0%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="resultAdvisory"></div>
+
+            <div style="margin-top:1.4rem;display:flex;gap:0.8rem;">
+              <button class="btn btn-primary" id="downloadReportBtn" style="flex:1;">
+                <span>📑</span> Download Clinical PDF Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 3: VISION SIMULATOR                                      -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-simulator">
+    <div class="container simulator-section">
+      <div style="text-align:center;margin-bottom:3rem;">
+        <span class="hero-pill">👁️ Clinical Educational Tool</span>
+        <h2 style="font-size:2.8rem;color:#ffffff;font-weight:800;margin-top:0.4rem;">Retinitis Pigmentosa Vision Simulator</h2>
+        <p style="color:var(--text-muted);max-width:650px;margin:0.5rem auto 0;">Experience how progressive rod-cone dystrophy restricts peripheral vision over time, creating the signature "tunnel vision" and night blindness.</p>
+      </div>
+
+      <div class="simulator-box">
+        <div class="canvas-wrapper">
+          <canvas id="visionCanvas" width="480" height="480"></canvas>
+        </div>
+
+        <div class="sim-controls">
+          <div>
+            <h3 id="simStageLabel" style="color:#38bdf8;font-size:1.35rem;margin-bottom:0.4rem;">Stage 0: Unimpaired Retinal Vision</h3>
+            <p id="simStageDesc" style="color:var(--text-muted);font-size:0.95rem;line-height:1.7;">Full 180° visual field with crisp peripheral detail and normal photoreceptor signaling.</p>
+          </div>
+
+          <div>
+            <label style="display:flex;justify-content:space-between;color:var(--text-dim);font-weight:700;font-size:0.85rem;margin-bottom:0.6rem;">
+              <span>MILD / EARLY</span>
+              <span>PROGRESSION SEVERITY SLIDER</span>
+              <span>ADVANCED TUNNEL</span>
+            </label>
+            <input type="range" id="rpSlider" class="custom-slider" min="0" max="100" value="0" />
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:1.2rem;">
+            <div style="font-weight:700;color:#fff;margin-bottom:0.3rem;">Clinical Pathology Explanation:</div>
+            <div style="color:var(--text-dim);font-size:0.85rem;line-height:1.6;">In Retinitis Pigmentosa, rod photoreceptors distributed across the peripheral retina degenerate first, causing night blindness and mid-peripheral scotomas. Central macular cone vision remains intact until the latest stages.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 4: ABOUT                                                 -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-about">
+    <div class="container" style="padding-top:2rem;max-width:900px;">
+      <div style="text-align:center;margin-bottom:3rem;">
+        <span class="hero-pill">ℹ️ About RPeyecare</span>
+        <h2 style="font-size:2.8rem;color:#ffffff;font-weight:800;margin-top:0.4rem;">How It Works</h2>
+        <p style="color:var(--text-muted);max-width:650px;margin:0.5rem auto 0;">A complete end-to-end clinical AI platform built for early detection of Retinitis Pigmentosa.</p>
+      </div>
+
+      <!-- Steps -->
+      <div style="display:grid;gap:1.2rem;margin-bottom:3rem;">
+        <div class="glass-panel" style="padding:1.8rem;display:flex;gap:1.4rem;align-items:flex-start;">
+          <div style="background:linear-gradient(135deg,#2563eb,#06b6d4);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">1</div>
+          <div>
+            <h3 style="color:#fff;margin-bottom:0.4rem;">Upload a Retinal Fundus Image</h3>
+            <p style="color:var(--text-muted);font-size:0.93rem;line-height:1.6;">Patient uploads a color fundus photograph or selects one of the pre-loaded benchmark samples. Accepted formats: PNG, JPG, BMP (max 20 MB).</p>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="padding:1.8rem;display:flex;gap:1.4rem;align-items:flex-start;">
+          <div style="background:linear-gradient(135deg,#7c3aed,#2563eb);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">2</div>
+          <div>
+            <h3 style="color:#fff;margin-bottom:0.4rem;">ResNet-50 Deep Feature Extraction</h3>
+            <p style="color:var(--text-muted);font-size:0.93rem;line-height:1.6;">The image is pre-processed (contrast enhancement + sharpening) and fed into a fine-tuned ResNet-50 model trained on labelled RP retinal datasets. Softmax probabilities are computed for both classes.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="padding:1.8rem;display:flex;gap:1.4rem;align-items:flex-start;">
+          <div style="background:linear-gradient(135deg,#10b981,#06b6d4);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">3</div>
+          <div>
+            <h3 style="color:#fff;margin-bottom:0.4rem;">Risk Stratification &amp; Report</h3>
+            <p style="color:var(--text-muted);font-size:0.93rem;line-height:1.6;">Results are categorized as LOW / MEDIUM / HIGH risk. A clinical PDF report is instantly generated with patient details, probability breakdown, and clinical recommendations — downloadable in one click.</p>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="padding:1.8rem;display:flex;gap:1.4rem;align-items:flex-start;">
+          <div style="background:linear-gradient(135deg,#f43f5e,#f59e0b);border-radius:50%;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">4</div>
+          <div>
+            <h3 style="color:#fff;margin-bottom:0.4rem;">Clinic Referral &amp; Booking</h3>
+            <p style="color:var(--text-muted);font-size:0.93rem;line-height:1.6;">High-risk patients are directed to book an in-person consultation with a verified ophthalmology clinic. The clinic portal manages the appointment queue with real-time status updates.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Stack -->
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <h3 style="color:#fff;font-size:1.6rem;font-weight:700;">Technology Stack</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:3rem;">
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🧠</div>
+          <div style="color:#fff;font-weight:700;">PyTorch ResNet-50</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">Transfer Learning AI</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🐍</div>
+          <div style="color:#fff;font-weight:700;">Python + Flask</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">REST API Backend</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🗄️</div>
+          <div style="color:#fff;font-weight:700;">SQLite + bcrypt</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">Secure Database</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">📄</div>
+          <div style="color:#fff;font-weight:700;">ReportLab PDF</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">Clinical Report Generation</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🌐</div>
+          <div style="color:#fff;font-weight:700;">HTML5 + CSS3 + JS</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">SPA Frontend</div>
+        </div>
+        <div class="glass-panel" style="padding:1.2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">🖼️</div>
+          <div style="color:#fff;font-weight:700;">Pillow / Canvas</div>
+          <div style="color:var(--text-dim);font-size:0.82rem;">Image Processing</div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding:1.5rem;border-left:4px solid #f59e0b;">
+        <b style="color:#fbbf24;">⚠️ Medical Disclaimer:</b>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:0.4rem;">RPeyecare is an AI decision-support screening tool and does not constitute a clinical diagnosis. All AI findings should be confirmed by a board-certified ophthalmologist or retinal specialist.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 5: PATIENT PORTAL                                        -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-patient">
+    <div class="container" style="padding-top:2rem;">
+      <h2 style="font-size:2.4rem;color:#ffffff;font-weight:800;margin-bottom:0.3rem;">👤 Patient Health Record</h2>
+      <p style="color:var(--text-muted);margin-bottom:2rem;">Manage your screenings, appointments, and book consultations with verified clinics.</p>
+
+      <!-- Patient Tabs -->
+      <div style="display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm patient-tab active-tab" data-ptab="detections">📋 My Screening History</button>
+        <button class="btn btn-secondary btn-sm patient-tab" data-ptab="bookings">📅 My Appointments</button>
+        <button class="btn btn-secondary btn-sm patient-tab" data-ptab="clinics">🏥 Find Nearby Clinics</button>
+      </div>
+
+      <div id="ptab-detections" class="ptab-panel">
+        <div id="patientDetectionsList"><p style="color:var(--text-muted);padding:1rem;">Loading your screening records...</p></div>
+      </div>
+      <div id="ptab-bookings" class="ptab-panel" style="display:none;">
+        <div id="patientBookingsList"><p style="color:var(--text-muted);padding:1rem;">Loading your appointments...</p></div>
+      </div>
+      <div id="ptab-clinics" class="ptab-panel" style="display:none;">
+        <div style="display:flex;gap:0.6rem;margin-bottom:1rem;">
+          <input id="searchCity" class="form-control" placeholder="Search by city..." style="max-width:220px;" />
+          <input id="searchState" class="form-control" placeholder="Search by state..." style="max-width:220px;" />
+          <button class="btn btn-primary btn-sm" onclick="searchClinics()">Search</button>
+          <button class="btn btn-secondary btn-sm" onclick="loadAllClinics()">Show All</button>
+        </div>
+        <div id="nearbyClinicsList"><p style="color:var(--text-muted);padding:1rem;">Loading registered partner clinics...</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 6: CLINIC PORTAL                                         -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-clinic">
+    <div class="container" style="padding-top:2rem;">
+      <h2 style="font-size:2.4rem;color:#ffffff;font-weight:800;margin-bottom:0.3rem;">🏥 Clinic &amp; Doctor Dashboard</h2>
+      <p style="color:var(--text-muted);margin-bottom:2rem;">Review incoming patient referrals and manage scheduled consultation appointments.</p>
+      <div id="clinicBookingsList" style="max-width:800px;">
+        <p style="color:var(--text-muted);padding:1rem;">Loading consultation queue...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- VIEW 7: ADMIN PORTAL                                          -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <section class="view-section" id="view-admin">
+    <div class="container" style="padding-top:2rem;">
+      <h2 style="font-size:2.4rem;color:#ffffff;font-weight:800;margin-bottom:0.3rem;">🛡️ Administrator Console</h2>
+      <p style="color:var(--text-muted);margin-bottom:2rem;">System oversight: clinic approvals, user management, and platform analytics.</p>
+
+      <!-- Admin Stats Row -->
+      <div id="adminStatsRow" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;"></div>
+
+      <!-- Admin Tabs -->
+      <div style="display:flex;gap:0.6rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm admin-tab active-tab" data-atab="pending">⏳ Pending Approvals</button>
+        <button class="btn btn-secondary btn-sm admin-tab" data-atab="allclinics">🏥 All Clinics</button>
+        <button class="btn btn-secondary btn-sm admin-tab" data-atab="users">👥 All Patients</button>
+      </div>
+
+      <div id="atab-pending" class="atab-panel">
+        <h3 style="color:#fff;margin-bottom:1rem;">⏳ Pending Clinic Approvals</h3>
+        <div id="adminPendingList"><p style="color:var(--text-muted);padding:1rem;">Loading verification list...</p></div>
+      </div>
+      <div id="atab-allclinics" class="atab-panel" style="display:none;">
+        <h3 style="color:#fff;margin-bottom:1rem;">🏥 All Registered Clinics</h3>
+        <div id="adminAllClinicsList"><p style="color:var(--text-muted);padding:1rem;">Loading clinics...</p></div>
+      </div>
+      <div id="atab-users" class="atab-panel" style="display:none;">
+        <h3 style="color:#fff;margin-bottom:1rem;">👥 All Registered Patients</h3>
+        <div id="adminUsersList"><p style="color:var(--text-muted);padding:1rem;">Loading patients...</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <!-- AUTH MODAL (Sign In + Register Tabs)                          -->
+  <!-- ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card" style="max-width:480px;">
+      <button class="modal-close" id="closeAuthModal">&times;</button>
+      <div style="text-align:center;margin-bottom:1.2rem;">
+        <div class="brand-icon" style="margin:0 auto 0.8rem;">👁️</div>
+        <h3 style="color:#fff;font-size:1.6rem;">RPeyecare Portal</h3>
+        <p style="color:var(--text-muted);font-size:0.88rem;">Sign in or create a new account.</p>
+      </div>
+
+      <!-- Login/Register Toggle -->
+      <div style="display:flex;gap:0;margin-bottom:1.5rem;background:rgba(255,255,255,0.05);border-radius:10px;padding:4px;">
+        <button id="tabLoginBtn" class="auth-tab-btn active" onclick="switchAuthTab('login')">Sign In</button>
+        <button id="tabRegisterBtn" class="auth-tab-btn" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div style="display:flex;gap:1rem;margin-bottom:1.2rem;justify-content:center;">
+          <label style="color:#fff;cursor:pointer;"><input type="radio" name="authRole" value="user" checked /> Patient</label>
+          <label style="color:#fff;cursor:pointer;"><input type="radio" name="authRole" value="clinic" /> Clinic</label>
+          <label style="color:#fff;cursor:pointer;"><input type="radio" name="authRole" value="admin" /> Admin</label>
+        </div>
+        <form id="authForm">
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="authEmail" class="form-control" placeholder="name@domain.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;padding:0.8rem;">Sign In →</button>
+        </form>
+        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-glass);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:0.8rem;color:var(--text-dim);">Demo Administrator:</span>
+          <button class="btn btn-secondary btn-sm" data-autofill="admin">Auto-fill Admin Login</button>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="registerForm" style="display:none;">
+        <div style="display:flex;gap:0;margin-bottom:1.2rem;background:rgba(255,255,255,0.05);border-radius:10px;padding:4px;">
+          <button id="regPatientBtn" class="auth-tab-btn active" onclick="switchRegTab('patient')">Patient</button>
+          <button id="regClinicBtn" class="auth-tab-btn" onclick="switchRegTab('clinic')">Clinic</button>
+        </div>
+
+        <!-- Patient Registration -->
+        <form id="patientRegForm" class="reg-form">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" name="name" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Phone *</label><input type="text" name="phone" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Password *</label><input type="password" name="password" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">City *</label><input type="text" name="city" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">State *</label><input type="text" name="state" class="form-control" required /></div>
+          </div>
+          <div class="form-group"><label class="form-label">Address</label><input type="text" name="address" class="form-control" /></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;padding:0.8rem;">Create Patient Account →</button>
+        </form>
+
+        <!-- Clinic Registration -->
+        <form id="clinicRegForm" class="reg-form" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+            <div class="form-group"><label class="form-label">Clinic Name *</label><input type="text" name="clinic_name" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Doctor Name *</label><input type="text" name="doctor_name" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Password *</label><input type="password" name="password" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Phone *</label><input type="text" name="phone" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">Reg. Number *</label><input type="text" name="reg_number" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">City *</label><input type="text" name="city" class="form-control" required /></div>
+            <div class="form-group"><label class="form-label">State *</label><input type="text" name="state" class="form-control" required /></div>
+          </div>
+          <div class="form-group"><label class="form-label">Full Address *</label><input type="text" name="address" class="form-control" required /></div>
+          <div class="form-group"><label class="form-label">Specialization</label><input type="text" name="specialization" class="form-control" placeholder="Ophthalmology" /></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem;padding:0.8rem;">Submit Clinic for Approval →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="/static/app.js"></script>
+</body>
+</html>

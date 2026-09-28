@@ -1,0 +1,17 @@
+name: Retina AI
+runtime: python3.10
+sdk: streamlit
+app_file: app.py
+pinned: true
+
+dependencies:
+  - torch
+  - torchvision
+  - transformers
+  - streamlit
+  - pillow
+  - opencv-python
+  - numpy
+  - pandas
+
+python_version: "3.10"
